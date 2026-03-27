@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Josh's Page</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --g50:#EAF3DE;--g100:#C0DD97;--g400:#639922;--g600:#3B6D11;--g800:#27500A;
+  --t50:#E1F5EE;--t400:#1D9E75;--t600:#0F6E56;
+  --a50:#FAEEDA;--a400:#BA7517;--a600:#854F0B;
+  --b50:#E6F1FB;--b400:#378ADD;--b600:#185FA5;
+  --c50:#FAECE7;--c400:#D85A30;--c600:#993C1D;
+  --p50:#EEEDFE;--p200:#AFA9EC;--p400:#7F77DD;--p600:#534AB7;--p800:#3C3489;
+  --gr50:#F8F9F6;--gr100:#F1EFE8;--gr200:#D3D1C7;--gr400:#888780;--gr600:#5F5E5A;--gr800:#444441;--gr900:#2C2C2A;
+  --white:#fff;--rsm:6px;--rmd:10px;--rlg:14px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--gr100);color:var(--gr900);overflow:hidden;}
+.outer-scroll{height:100vh;overflow-y:auto;}
+.fixed-top{height:100vh;display:flex;flex-direction:column;}
+
+/* ── TOPBAR ── */
+.topbar{height:50px;background:var(--white);border-bottom:1px solid var(--gr200);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-icon{width:28px;height:28px;background:var(--g600);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;}
+.logo-icon svg{width:14px;height:14px;}
+.logo-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--g800);}
+.logo-sub{font-size:9px;color:var(--gr400);text-transform:uppercase;letter-spacing:.5px;}
+.topbar-r{display:flex;align-items:center;gap:10px;}
+.day-pill{font-size:11px;font-weight:600;color:var(--p600);background:var(--p50);padding:3px 11px;border-radius:20px;border:1px solid var(--p200);}
+.date-pill{font-size:11px;color:var(--g600);background:var(--g50);padding:3px 10px;border-radius:20px;border:1px solid var(--g100);}
+.av{width:28px;height:28px;background:var(--g600);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;cursor:pointer;}
+
+/* ── PAGE BODY: left main + right sidebar ── */
+.page{display:flex;height:calc(100vh - 50px);overflow:hidden;}
+
+/* ── LEFT MAIN (3 stacked sections) ── */
+.left{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+/* section shared */
+.section{display:flex;flex-direction:column;background:var(--white);}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 16px 7px;border-bottom:1px solid var(--gr100);flex-shrink:0;}
+.sec-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--gr900);}
+.sec-icon{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.sec-icon svg{width:10px;height:10px;}
+.sec-action{font-size:10px;font-weight:500;color:var(--g600);background:none;border:1px solid var(--g100);border-radius:20px;padding:2px 8px;cursor:pointer;}
+.sec-action:hover{background:var(--g50);}
+
+/* ── TODO (top, fixed height) ── */
+.todo-sec{flex:0 0 auto;border-bottom:2px solid var(--gr100);}
+.todo-add-row{display:flex;gap:6px;padding:8px 16px 6px;flex-shrink:0;}
+.t-inp{flex:1;border:1px solid var(--gr200);border-radius:var(--rsm);padding:6px 9px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);background:var(--gr50);}
+.t-inp:focus{border-color:var(--g400);background:var(--white);}
+.t-inp::placeholder{color:var(--gr400);}
+.t-sel{border:1px solid var(--gr200);border-radius:var(--rsm);padding:6px 6px;font-size:10px;font-family:'DM Sans',sans-serif;outline:none;background:var(--gr50);color:var(--gr800);cursor:pointer;}
+.t-btn{padding:6px 12px;font-size:10px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--g600);color:#fff;cursor:pointer;white-space:nowrap;}
+.t-btn:hover{background:var(--g800);}
+.todo-filters{display:flex;gap:3px;}
+.tf{font-size:9px;font-weight:500;padding:2px 7px;border-radius:20px;border:1px solid var(--gr200);background:none;color:var(--gr600);cursor:pointer;}
+.tf[data-f="all"].on{background:var(--gr800);color:#fff;border-color:var(--gr800);}
+.tf[data-f="job"].on{background:var(--g600);color:#fff;border-color:var(--g600);}
+.tf[data-f="task"].on{background:var(--b400);color:#fff;border-color:var(--b400);}
+.tf[data-f="general"].on{background:var(--c400);color:#fff;border-color:var(--c400);}
+
+.todo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:6px 16px 10px;overflow-y:auto;max-height:140px;}
+.ti{display:flex;align-items:flex-start;gap:6px;padding:6px 7px;border-radius:var(--rsm);border:1px solid var(--gr100);background:var(--gr50);}
+.ti:hover{border-color:var(--gr200);}
+.ti.done{opacity:.4;}
+.ti-chk{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--gr200);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;background:none;}
+.ti.done .ti-chk{background:var(--g600);border-color:var(--g600);}
+.ti-body{flex:1;min-width:0;}
+.ti-txt{font-size:10px;color:var(--gr900);line-height:1.4;word-break:break-word;}
+.ti.done .ti-txt{text-decoration:line-through;color:var(--gr400);}
+.ti-tag{display:inline-block;font-size:7px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:1px 4px;border-radius:3px;margin-top:2px;}
+.ti-tag.task{background:var(--b50);color:var(--b600);}
+.ti-tag.general{background:var(--c50);color:var(--c600);}
+.ti-tag.job{background:var(--g50);color:var(--g800);}
+.ti-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:12px;line-height:1;flex-shrink:0;opacity:0;}
+.ti:hover .ti-del{opacity:1;}
+.todo-empty{grid-column:1/-1;font-size:10px;color:var(--gr400);text-align:center;padding:16px 0;}
+
+/* ── CALENDAR (middle, flex fills remaining) ── */
+.cal-sec{flex:1;overflow:hidden;border-bottom:2px solid var(--gr100);}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 7px;border-bottom:1px solid var(--gr100);flex-shrink:0;}
+.cal-nav{display:flex;align-items:center;gap:6px;}
+.cal-lbl{font-size:13px;font-weight:500;color:var(--gr900);min-width:130px;}
+.nb{background:none;border:1px solid var(--gr200);border-radius:var(--rsm);width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gr600);font-size:11px;}
+.nb:hover{background:var(--gr100);}
+.vtabs{display:flex;gap:2px;background:var(--gr100);border-radius:var(--rsm);padding:2px;}
+.vtab{padding:2px 8px;font-size:9px;font-weight:500;border:none;background:none;border-radius:4px;cursor:pointer;color:var(--gr600);}
+.vtab.active{background:var(--white);color:var(--g800);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.cal-wrap{flex:1;overflow-y:auto;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid var(--gr100);border-top:1px solid var(--gr100);}
+.dlbl{text-align:center;font-size:9px;font-weight:500;color:var(--gr400);letter-spacing:.5px;text-transform:uppercase;padding:5px 0;border-right:1px solid var(--gr100);border-bottom:1px solid var(--gr100);background:var(--gr50);}
+.cc{min-height:58px;border-right:1px solid var(--gr100);border-bottom:1px solid var(--gr100);padding:3px 4px;cursor:pointer;transition:background .1s;}
+.cc:hover{background:var(--gr50);}
+.cc.other .dn{color:var(--gr200);}
+.cc.today{background:#f4faec;}
+.cc.sel{background:var(--g50);}
+.dn{font-size:10px;font-weight:500;color:var(--gr800);width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:2px;}
+.cc.today .dn{background:var(--g600);color:#fff;}
+.ec{font-size:8px;font-weight:500;padding:1px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;}
+.ec.job{background:var(--g50);color:var(--g800);border-left:2px solid var(--g400);}
+.ec.reminder{background:var(--a50);color:var(--a600);border-left:2px solid var(--a400);}
+.ec.meeting{background:var(--t50);color:var(--t600);border-left:2px solid var(--t400);}
+.ec-more{font-size:7px;color:var(--gr400);padding:0 3px;}
+
+/* ── GOALS (bottom) ── */
+.goals-sec{flex:0 0 auto;border-top:1px solid var(--gr100);}
+.goals-body{display:flex;flex-direction:column;gap:7px;padding:7px 16px 10px;overflow-y:auto;max-height:130px;}
+.goal-item{display:flex;flex-direction:column;gap:3px;}
+.goal-top{display:flex;align-items:center;gap:6px;}
+.goal-lbl{font-size:11px;font-weight:500;color:var(--gr900);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.goal-pct{font-size:10px;font-weight:600;color:var(--a600);flex-shrink:0;}
+.goal-del{background:none;border:none;color:#ccc;font-size:12px;cursor:pointer;opacity:0;padding:0;}
+.goal-item:hover .goal-del{opacity:1;}
+.goal-bar{height:5px;background:var(--gr100);border-radius:3px;overflow:hidden;cursor:pointer;}
+.goal-fill{height:100%;border-radius:3px;background:var(--a400);transition:width .3s;}
+.goal-fill.done{background:var(--g400);}
+.goal-meta{font-size:9px;color:var(--gr400);}
+/* goal inline form */
+.goal-form{display:none;flex-direction:column;gap:5px;padding:6px 16px 8px;border-top:1px solid var(--gr100);}
+.goal-form.open{display:flex;}
+.gfi{border:1px solid var(--gr200);border-radius:var(--rsm);padding:5px 8px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);background:var(--gr50);width:100%;}
+.gfi:focus{border-color:var(--a400);}
+.gf-row{display:flex;gap:4px;}
+.gf-save{padding:5px 11px;font-size:10px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--a400);color:#fff;cursor:pointer;}
+.gf-cancel{padding:5px 9px;font-size:10px;font-family:'DM Sans',sans-serif;border:1px solid var(--gr200);border-radius:var(--rsm);background:none;color:var(--gr600);cursor:pointer;}
+.goals-empty{font-size:10px;color:var(--gr400);text-align:center;padding:10px 0;}
+.goals-row-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+
+/* ── RIGHT SIDEBAR ── */
+.right{width:300px;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid var(--gr200);overflow:hidden;}
+
+/* ── DAILY DUTIES (top of right sidebar) ── */
+.daily-sec{flex:0 0 auto;background:var(--white);border-bottom:2px solid var(--gr200);}
+.day-tabs{display:flex;gap:2px;padding:5px 14px 4px;flex-wrap:wrap;border-bottom:1px solid var(--gr100);flex-shrink:0;}
+.dtab{font-size:9px;font-weight:500;padding:2px 6px;border-radius:20px;border:1px solid var(--gr200);background:none;color:var(--gr600);cursor:pointer;}
+.dtab.active{background:var(--p600);color:#fff;border-color:var(--p600);}
+.dc-progress{display:flex;align-items:center;gap:6px;padding:4px 14px 3px;flex-shrink:0;}
+.dc-bar-bg{flex:1;height:4px;background:var(--gr100);border-radius:2px;overflow:hidden;}
+.dc-bar-fill{height:100%;background:var(--p400);border-radius:2px;transition:width .3s;}
+.dc-pct{font-size:9px;color:var(--gr400);flex-shrink:0;min-width:22px;text-align:right;}
+.daily-list{overflow-y:auto;padding:5px 12px 4px;display:flex;flex-direction:column;gap:3px;max-height:160px;}
+.dc-item{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:var(--rsm);border:1px solid var(--gr100);background:var(--gr50);}
+.dc-item:hover{border-color:var(--gr200);}
+.dc-item.checked{opacity:.4;}
+.dc-chk{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--gr200);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:none;}
+.dc-item.checked .dc-chk{background:var(--p600);border-color:var(--p600);}
+.dc-txt{flex:1;font-size:11px;color:var(--gr900);line-height:1.3;}
+.dc-item.checked .dc-txt{text-decoration:line-through;color:var(--gr400);}
+.dc-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:12px;opacity:0;}
+.dc-item:hover .dc-del{opacity:1;}
+.dc-add-row{display:flex;gap:5px;padding:5px 12px 8px;flex-shrink:0;border-top:1px solid var(--gr100);}
+.dc-inp{flex:1;border:1px solid var(--gr200);border-radius:var(--rsm);padding:5px 8px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);background:var(--gr50);}
+.dc-inp:focus{border-color:var(--p400);}
+.dc-inp::placeholder{color:var(--gr400);}
+.dc-add-btn{padding:5px 9px;font-size:9px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--p600);color:#fff;cursor:pointer;}
+.dc-add-btn:hover{background:var(--p800);}
+.dc-empty{font-size:10px;color:var(--gr400);text-align:center;padding:10px 0;font-style:italic;}
+
+/* ── CHAT (bottom of right sidebar, fills rest) ── */
+.chat-sec{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--white);}
+.chat-hdr{display:flex;align-items:center;gap:8px;padding:9px 14px 8px;border-bottom:1px solid var(--gr200);flex-shrink:0;}
+.bot-av{width:26px;height:26px;background:var(--g600);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bot-av svg{width:13px;height:13px;}
+.chat-title{font-size:12px;font-weight:500;color:var(--gr900);}
+.chat-sub{font-size:9px;color:var(--gr400);}
+.online-dot{width:6px;height:6px;background:#4caf50;border-radius:50%;margin-left:auto;flex-shrink:0;}
+.chat-msgs{flex:1;overflow-y:auto;padding:9px 12px 4px;display:flex;flex-direction:column;gap:7px;}
+.msg{display:flex;flex-direction:column;gap:2px;}
+.msg.user{align-items:flex-end;}
+.msg.bot{align-items:flex-start;}
+.bubble{max-width:93%;padding:7px 10px;border-radius:11px;font-size:11px;line-height:1.5;}
+.msg.bot .bubble{background:var(--gr50);color:var(--gr900);border:1px solid var(--gr200);border-bottom-left-radius:3px;}
+.msg.user .bubble{background:var(--g600);color:#fff;border-bottom-right-radius:3px;}
+.msg-time{font-size:9px;color:var(--gr400);padding:0 3px;}
+.suggs{display:flex;flex-wrap:wrap;gap:3px;padding:3px 12px 5px;flex-shrink:0;}
+.sg{font-size:9px;padding:2px 7px;border-radius:20px;border:1px solid var(--gr200);background:var(--white);color:var(--gr600);cursor:pointer;white-space:nowrap;}
+.sg:hover{border-color:var(--g400);color:var(--g800);background:var(--g50);}
+.chat-inp-wrap{padding:6px 12px 9px;background:var(--white);border-top:1px solid var(--gr200);flex-shrink:0;}
+.chat-inp-row{display:flex;gap:5px;align-items:flex-end;}
+.chat-inp{flex:1;border:1px solid var(--gr200);border-radius:var(--rmd);padding:6px 9px;font-size:11px;font-family:'DM Sans',sans-serif;resize:none;min-height:32px;max-height:65px;outline:none;color:var(--gr900);background:var(--gr50);line-height:1.4;}
+.chat-inp:focus{border-color:var(--g400);background:var(--white);}
+.chat-inp::placeholder{color:var(--gr400);}
+.send-btn{width:30px;height:30px;border-radius:var(--rsm);background:var(--g600);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.send-btn:hover{background:var(--g800);}
+.send-btn svg{width:12px;height:12px;}
+
+/* ── MODAL ── */
+.modal-ov{position:fixed;inset:0;background:rgba(44,44,42,.4);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-ov.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:var(--rlg);width:340px;max-width:calc(100vw - 40px);box-shadow:0 8px 40px rgba(0,0,0,.12);overflow:hidden;transform:translateY(8px);transition:transform .2s;}
+.modal-ov.open .modal{transform:translateY(0);}
+.mh{padding:12px 16px;border-bottom:1px solid var(--gr100);display:flex;justify-content:space-between;align-items:center;}
+.mh-title{font-size:13px;font-weight:500;}
+.mc{background:none;border:none;cursor:pointer;color:var(--gr400);font-size:17px;line-height:1;}
+.mb{padding:13px 16px;display:flex;flex-direction:column;gap:9px;}
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fl{font-size:10px;font-weight:500;color:var(--gr600);}
+.fi,.fs{border:1px solid var(--gr200);border-radius:var(--rsm);padding:6px 8px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);width:100%;}
+.fi:focus,.fs:focus{border-color:var(--g400);}
+.mf{padding:10px 16px;border-top:1px solid var(--gr100);display:flex;gap:6px;justify-content:flex-end;}
+.btn-s{padding:5px 12px;font-size:11px;font-family:'DM Sans',sans-serif;border:1px solid var(--gr200);border-radius:var(--rsm);background:none;color:var(--gr600);cursor:pointer;}
+.btn-p{padding:5px 12px;font-size:11px;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--g600);color:#fff;cursor:pointer;font-weight:500;}
+.btn-p:hover{background:var(--g800);}
+
+/* ── API KEY BANNER ── */
+.api-banner{background:#fffbeb;border-bottom:1px solid #fcd34d;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:11px;color:#92400e;}
+.api-banner.hidden{display:none;}
+.api-banner strong{font-weight:600;}
+.api-key-inp{flex:1;border:1px solid #fcd34d;border-radius:var(--rsm);padding:5px 9px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;background:#fff;color:var(--gr900);max-width:320px;}
+.api-key-inp:focus{border-color:var(--a400);}
+.api-save-btn{padding:5px 12px;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:#d97706;color:#fff;cursor:pointer;white-space:nowrap;}
+.api-save-btn:hover{background:#b45309;}
+.api-edit-btn{font-size:10px;color:var(--gr400);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+
+/* ── WHITEBOARD SECTION (below main page) ── */
+.wb-page{background:var(--gr100);border-top:3px solid var(--gr200);padding:20px;}
+.wb-inner{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
+.wb-title-row{display:flex;align-items:center;gap:10px;}
+.wb-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--gr900);}
+.wb-sub{font-size:11px;color:var(--gr400);}
+.wb-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+/* upload box */
+.wb-upload-box{background:var(--white);border-radius:var(--rlg);border:2px dashed var(--gr200);display:flex;flex-direction:column;overflow:hidden;}
+.wb-upload-hdr{padding:12px 16px 10px;border-bottom:1px solid var(--gr100);display:flex;align-items:center;justify-content:space-between;}
+.wb-upload-title{font-size:12px;font-weight:600;color:var(--gr900);display:flex;align-items:center;gap:7px;}
+.wb-upload-icon{width:18px;height:18px;background:var(--b400);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.wb-upload-icon svg{width:10px;height:10px;}
+.wb-drop{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:12px;cursor:pointer;transition:background .15s;}
+.wb-drop:hover{background:var(--gr50);}
+.wb-drop-icon{width:44px;height:44px;background:var(--b50);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.wb-drop-icon svg{width:22px;height:22px;}
+.wb-drop-text{font-size:12px;color:var(--gr600);text-align:center;line-height:1.5;}
+.wb-drop-text strong{color:var(--b600);cursor:pointer;}
+.wb-file-inp{display:none;}
+.wb-preview{width:100%;height:auto;object-fit:contain;display:none;}
+.wb-preview.show{display:block;}
+.wb-actions{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--gr100);}
+.wb-extract-btn{padding:7px 16px;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--b400);color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.wb-extract-btn:hover{background:var(--b600);}
+.wb-extract-btn:disabled{background:var(--gr200);cursor:not-allowed;}
+.wb-clear-btn{padding:7px 14px;font-size:12px;font-family:'DM Sans',sans-serif;border:1px solid var(--gr200);border-radius:var(--rsm);background:none;color:var(--gr600);cursor:pointer;}
+/* extracted jobs */
+.wb-jobs-box{background:var(--white);border-radius:var(--rlg);border:1px solid var(--gr200);display:flex;flex-direction:column;overflow:hidden;}
+.wb-jobs-hdr{padding:12px 16px 10px;border-bottom:1px solid var(--gr100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.wb-jobs-title{font-size:12px;font-weight:600;color:var(--gr900);display:flex;align-items:center;gap:7px;}
+.wb-jobs-icon{width:18px;height:18px;background:var(--g600);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.wb-jobs-icon svg{width:10px;height:10px;}
+.wb-jobs-btns{display:flex;gap:6px;}
+.wb-save-all-btn{padding:5px 12px;font-size:10px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--g600);color:#fff;cursor:pointer;}
+.wb-save-all-btn:hover{background:var(--g800);}
+.wb-jobs-body{flex:1;overflow-y:visible;padding:10px 14px 12px;}
+.wb-empty{font-size:11px;color:var(--gr400);text-align:center;padding:30px 0;font-style:italic;}
+/* day group — two-column whiteboard layout */
+.wb-board-layout{display:grid;grid-template-columns:1fr 1px 1fr;min-height:100%;}
+.wb-board-col{padding:6px 16px 12px;}
+.wb-board-divider{background:var(--gr200);}
+.wb-board-right{padding-left:18px;}
+.wb-board-day{margin-bottom:20px;}
+.wb-board-day-hdr{font-size:16px;font-weight:600;color:var(--gr900);padding-bottom:5px;border-bottom:2px solid var(--gr200);margin-bottom:7px;letter-spacing:-.2px;}
+.wb-board-day-hdr.urgent{color:var(--gr900);}
+.wb-board-jobs{display:flex;flex-direction:column;gap:1px;margin-bottom:4px;}
+.wb-job-row{display:flex;align-items:center;gap:6px;padding:2px 0;}
+.wb-job-bullet{width:5px;height:5px;border-radius:50%;background:var(--gr400);flex-shrink:0;}
+.wb-job-inp{flex:1;border:none;border-bottom:1px solid transparent;border-radius:0;padding:3px 2px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);background:transparent;}
+.wb-job-inp:hover{border-bottom-color:var(--gr200);background:var(--gr50);}
+.wb-job-inp:focus{border-bottom-color:var(--g400);background:var(--g50);}
+.wb-job-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:13px;flex-shrink:0;padding:0;opacity:0;transition:opacity .1s;}
+.wb-job-row:hover .wb-job-del{opacity:1;}
+.wb-job-row:hover .wb-job-bullet{background:var(--g400);}
+.wb-add-job-row{display:flex;gap:4px;margin-top:4px;}
+.wb-add-job-inp{flex:1;border:none;border-bottom:1px dashed var(--gr200);border-radius:0;padding:2px 2px;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;color:var(--gr900);background:transparent;}
+.wb-add-job-inp:focus{border-bottom:1px solid var(--g400);}
+.wb-add-job-inp::placeholder{color:var(--gr300,#c5c4be);font-style:italic;}
+.wb-add-job-btn{padding:1px 8px;font-size:14px;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--g50);color:var(--g600);cursor:pointer;font-weight:600;line-height:1.4;}
+.wb-add-job-btn:hover{background:var(--g100);}
+.wb-confirm-btn{padding:5px 12px;font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;border:none;border-radius:var(--rsm);background:var(--g600);color:#fff;cursor:pointer;}
+.wb-confirm-btn:hover{background:var(--g800);}
+/* confirmed job row — clickable */
+.wb-job-row.confirmed-mode .wb-job-inp{cursor:pointer;pointer-events:none;}
+.wb-job-row.confirmed-mode{cursor:pointer;border-radius:var(--rsm);padding:4px 6px;transition:background .12s;}
+.wb-job-row.confirmed-mode:hover{background:var(--g50);}
+.wb-job-row.confirmed-mode:hover .wb-job-bullet{background:var(--g600);}
+.wb-job-row.confirmed-mode .wb-job-del{display:none;}
+.wb-job-has-notes .wb-job-bullet{background:var(--g400) !important;}
+.wb-job-notes-dot{width:6px;height:6px;border-radius:50%;background:var(--g400);flex-shrink:0;display:none;}
+.wb-job-has-notes .wb-job-notes-dot{display:block;}
+/* status */
+.wb-status{font-size:11px;padding:6px 0;color:var(--gr600);display:flex;align-items:center;gap:6px;}
+.wb-spinner{width:14px;height:14px;border:2px solid var(--gr200);border-top-color:var(--b400);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── WHITEBOARD PAGE SCROLL WRAPPER ── */
+
+/* typing */
+.tdots{display:flex;gap:3px;align-items:center;padding:2px 0;}
+.tdots span{width:5px;height:5px;background:var(--gr400);border-radius:50%;animation:bnc 1.2s infinite;}
+.tdots span:nth-child(2){animation-delay:.2s;}
+.tdots span:nth-child(3){animation-delay:.4s;}
+@keyframes bnc{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--gr200);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div class="outer-scroll">
+<div class="fixed-top">
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+    <div><div class="logo-name">Josh's Page</div><div class="logo-sub">Life · Work · Goals</div></div>
+  </div>
+  <div class="topbar-r">
+    <div class="day-pill" id="day-pill">Monday</div>
+    <div class="date-pill" id="date-pill"></div>
+    <div class="av">J</div>
+  </div>
+</div>
+
+<!-- API KEY BANNER -->
+<div class="api-banner" id="api-banner">
+  <span>⚡</span>
+  <div style="flex:1;min-width:0;">
+    <strong>Enter your Anthropic API key</strong> to activate Crew Assistant.
+    Get one free at <a href="https://console.anthropic.com" target="_blank" style="color:#92400e;">console.anthropic.com</a>
+  </div>
+  <input class="api-key-inp" id="api-key-inp" type="password" placeholder="sk-ant-..." />
+  <button class="api-save-btn" onclick="saveApiKey()">Save & Activate</button>
+</div>
+
+<div class="page">
+
+  <!-- ════════════ LEFT MAIN ════════════ -->
+  <div class="left">
+
+    <!-- TO-DO LIST (top) -->
+    <div class="section todo-sec">
+      <div class="sec-hdr">
+        <div class="sec-title">
+          <div class="sec-icon" style="background:var(--gr900);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          To-Do List
+          <span id="todo-count" style="font-size:9px;font-weight:400;color:var(--gr400);"></span>
+        </div>
+        <div class="todo-filters">
+          <button class="tf on" data-f="all" onclick="setFilter('all',this)">All</button>
+          <button class="tf" data-f="job" onclick="setFilter('job',this)">Jobs</button>
+          <button class="tf" data-f="task" onclick="setFilter('task',this)">Tasks</button>
+          <button class="tf" data-f="general" onclick="setFilter('general',this)">General</button>
+        </div>
+      </div>
+      <div class="todo-add-row">
+        <input class="t-inp" id="t-inp" placeholder="Add a to-do item..." />
+        <select class="t-sel" id="t-sel">
+          <option value="task">Task</option>
+          <option value="job">Job</option>
+          <option value="general">General</option>
+        </select>
+        <button class="t-btn" onclick="addTodoManual()">+ Add</button>
+      </div>
+      <div class="todo-grid" id="todo-grid"></div>
+    </div>
+
+    <!-- CALENDAR (middle, fills space) -->
+    <div class="section cal-sec" style="display:flex;flex-direction:column;">
+      <div class="cal-hdr">
+        <div class="cal-nav">
+          <button class="nb" id="prev-btn">&#8249;</button>
+          <div class="cal-lbl" id="cal-lbl"></div>
+          <button class="nb" id="next-btn">&#8250;</button>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="nb" id="today-btn" style="width:auto;padding:0 8px;font-size:9px;">Today</button>
+          <div class="vtabs">
+            <button class="vtab active">Month</button>
+            <button class="vtab">Week</button>
+          </div>
+        </div>
+      </div>
+      <div class="cal-wrap"><div class="cal-grid" id="cal-grid"></div></div>
+    </div>
+
+    <!-- GOALS (bottom) -->
+    <div class="section goals-sec">
+      <div class="sec-hdr">
+        <div class="sec-title">
+          <div class="sec-icon" style="background:var(--a400);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          Goals
+        </div>
+        <button class="sec-action" onclick="toggleGoalForm()">+ New goal</button>
+      </div>
+      <div class="goal-form" id="goal-form">
+        <input class="gfi" id="gf-name" placeholder="Goal name (e.g. Run 5km, earn $80k this year)" />
+        <div class="gf-row">
+          <input class="gfi" id="gf-target" placeholder="Target" type="number" min="1" style="width:76px;flex:none;" />
+          <input class="gfi" id="gf-current" placeholder="Current" type="number" min="0" style="width:76px;flex:none;" />
+          <input class="gfi" id="gf-unit" placeholder="Unit (kg, km, $, clients...)" style="flex:1;" />
+        </div>
+        <div class="gf-row">
+          <button class="gf-save" onclick="saveGoal()">Save goal</button>
+          <button class="gf-cancel" onclick="toggleGoalForm()">Cancel</button>
+        </div>
+      </div>
+      <div class="goals-body" id="goals-body"></div>
+    </div>
+
+  </div><!-- end .left -->
+
+  <!-- ════════════ RIGHT SIDEBAR ════════════ -->
+  <div class="right">
+
+    <!-- DAILY DUTIES (top) -->
+    <div class="daily-sec">
+      <div class="sec-hdr" style="padding:9px 14px 7px;">
+        <div class="sec-title">
+          <div class="sec-icon" style="background:var(--p600);"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          Daily Duties
+        </div>
+        <div id="active-day-lbl" style="font-size:11px;font-weight:600;color:var(--p600);background:var(--p50);padding:2px 9px;border-radius:20px;border:1px solid var(--p200);">Monday</div>
+      </div>
+      <div class="day-tabs" id="day-tabs"></div>
+      <div class="dc-progress">
+        <div class="dc-bar-bg"><div class="dc-bar-fill" id="dc-bar" style="width:0%"></div></div>
+        <div class="dc-pct" id="dc-pct">0%</div>
+      </div>
+      <div class="daily-list" id="daily-list"></div>
+      <div class="dc-add-row">
+        <input class="dc-inp" id="dc-inp" placeholder="Add a duty for this day..." />
+        <button class="dc-add-btn" onclick="addDuty()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- CREW ASSISTANT CHAT (bottom, fills rest) -->
+    <div class="chat-sec">
+      <div class="chat-hdr">
+        <div class="bot-av"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1" fill="white"/></svg></div>
+        <div><div class="chat-title">Crew Assistant</div><div class="chat-sub">Jobs · Tasks · Goals · Daily Duties</div></div>
+        <div class="online-dot"></div>
+      </div>
+      <div class="chat-msgs" id="chat-msgs"></div>
+      <div class="suggs">
+        <div class="sg" onclick="sendSugg(this)">Schedule a job</div>
+        <div class="sg" onclick="sendSugg(this)">Add a task</div>
+        <div class="sg" onclick="sendSugg(this)">New goal</div>
+        <div class="sg" onclick="sendSugg(this)">Add daily duty</div>
+        <div class="sg" onclick="sendSugg(this)">What's on today?</div>
+      </div>
+      <div class="chat-inp-wrap">
+        <div class="chat-inp-row">
+          <textarea class="chat-inp" id="chat-inp" placeholder="Tell me what to remember..." rows="1"></textarea>
+          <button class="send-btn" id="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .right -->
+</div><!-- end .page -->
+</div><!-- end .fixed-top -->
+
+<!-- ══════════ WHITEBOARD JOB PLANNER ══════════ -->
+<div class="wb-page">
+  <div class="wb-inner">
+    <div class="wb-title-row">
+      <div style="width:28px;height:28px;background:var(--b400);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      </div>
+      <div>
+        <div class="wb-title">Weekly Job Board</div>
+        <div class="wb-sub">Photo your whiteboard → AI extracts jobs → edit & save to calendar</div>
+      </div>
+    </div>
+
+    <div class="wb-cols">
+
+      <!-- LEFT: Photo upload -->
+      <div class="wb-upload-box" id="wb-upload-box">
+        <div class="wb-upload-hdr">
+          <div class="wb-upload-title">
+            <div class="wb-upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            Whiteboard Photo
+          </div>
+          <div id="wb-status" class="wb-status" style="display:none;"></div>
+        </div>
+        <div class="wb-drop" id="wb-drop" onclick="document.getElementById('wb-file-inp').click()">
+          <div class="wb-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="wb-drop-text"><strong>Click to upload</strong> or drag & drop your whiteboard photo<br><span style="font-size:10px;color:var(--gr400);">JPG, PNG — taken on your phone is fine</span></div>
+        </div>
+        <input type="file" class="wb-file-inp" id="wb-file-inp" accept="image/*" onchange="handleWbPhoto(this)">
+        <img class="wb-preview" id="wb-preview" alt="Whiteboard preview" />
+        <div class="wb-actions" id="wb-actions" style="display:none;">
+          <button class="wb-extract-btn" id="wb-extract-btn" onclick="extractJobs()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Extract Jobs with AI
+          </button>
+          <button class="wb-clear-btn" onclick="clearWbPhoto()">Clear</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Extracted editable jobs -->
+      <div class="wb-jobs-box">
+        <div class="wb-jobs-hdr">
+          <div class="wb-jobs-title">
+            <div class="wb-jobs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            Extracted Jobs
+            <span id="wb-job-count" style="font-size:9px;font-weight:400;color:var(--gr400);"></span>
+          </div>
+          <div class="wb-jobs-btns">
+            <span id="wb-confirmed-badge" style="display:none;font-size:10px;font-weight:600;color:var(--g600);background:var(--g50);border:1px solid var(--g100);border-radius:20px;padding:2px 9px;">✓ Confirmed</span>
+            <button class="wb-confirm-btn" id="wb-confirm-btn" onclick="confirmJobs()" style="display:none;">Jobs are Correct ✓</button>
+            <button class="wb-save-all-btn" id="wb-save-all-btn" onclick="saveAllToCalendar()" style="display:none;">Save All to Calendar</button>
+          </div>
+        </div>
+        <div class="wb-jobs-body" id="wb-jobs-body">
+          <div class="wb-empty">Upload a photo of your whiteboard and hit "Extract Jobs with AI" — the jobs will appear here, editable and ready to save.</div>
+        </div>
+      </div>
+
+    </div><!-- end wb-cols -->
+  </div><!-- end wb-inner -->
+</div><!-- end wb-page -->
+
+<!-- JOB DETAIL MODAL -->
+<div class="modal-ov" id="job-detail-ov">
+  <div class="modal" style="width:460px;">
+    <div class="mh">
+      <div>
+        <div class="mh-title" id="jd-title">Job Details</div>
+        <div style="font-size:10px;color:var(--gr400);margin-top:2px;" id="jd-section"></div>
+      </div>
+      <button class="mc" id="jd-close">&times;</button>
+    </div>
+    <div class="mb" style="gap:12px;">
+      <div class="fg">
+        <label class="fl">Job / Address</label>
+        <input type="text" class="fi" id="jd-name" />
+      </div>
+      <div class="fg">
+        <label class="fl">What this job entails</label>
+        <textarea class="fi" id="jd-blurb" rows="4" placeholder="e.g. Full lawn mow front and back, edge driveway, blow down paths. Bring the edger and 2 crew. Gate code: 1234..." style="resize:vertical;line-height:1.5;"></textarea>
+      </div>
+      <div class="fg">
+        <label class="fl">Crew assigned</label>
+        <input type="text" class="fi" id="jd-crew" placeholder="e.g. Paul, Sam" />
+      </div>
+      <div class="fg">
+        <label class="fl">Estimated hours</label>
+        <input type="text" class="fi" id="jd-hours" placeholder="e.g. 3 hours" />
+      </div>
+      <div class="fg">
+        <label class="fl">Notes / special instructions</label>
+        <input type="text" class="fi" id="jd-notes" placeholder="e.g. Client prefers afternoon, dog on property" />
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn-s" id="jd-cancel">Close</button>
+      <button class="btn-p" id="jd-save">Save Details</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end outer-scroll -->
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal-ov">
+  <div class="modal">
+    <div class="mh"><div class="mh-title">Add Calendar Event</div><button class="mc" id="mclose">&times;</button></div>
+    <div class="mb">
+      <div class="fg"><label class="fl">Title</label><input type="text" class="fi" id="m-title" placeholder="e.g. Gym session / Lawn mow at Smith's"></div>
+      <div class="fg"><label class="fl">Date</label><input type="date" class="fi" id="m-date"></div>
+      <div class="fg"><label class="fl">Type</label><select class="fs" id="m-type"><option value="job">Job / Work</option><option value="reminder">Reminder</option><option value="meeting">Meeting / Quote</option></select></div>
+      <div class="fg"><label class="fl">Notes (optional)</label><input type="text" class="fi" id="m-notes" placeholder="Client, address, details..."></div>
+    </div>
+    <div class="mf"><button class="btn-s" id="mcancel">Cancel</button><button class="btn-p" id="msave">Save</button></div>
+  </div>
+</div>
+
+<script>
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+let curDate=new Date(), selDate=null;
+let events={}, todos=[], goals=[];
+let todoFilter='all';
+let dailyDuties={Sunday:[],Monday:[],Tuesday:[],Wednesday:[],Thursday:[],Friday:[],Saturday:[]};
+let activeDay=DAY_NAMES[new Date().getDay()];
+
+/* ─ utils ─ */
+function dk(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+function fmtDate(k){const[y,m,d]=k.split('-');return new Date(y,m-1,d).toLocaleDateString('en-NZ',{weekday:'short',day:'numeric',month:'short'});}
+function tnow(){return new Date().toLocaleTimeString('en-NZ',{hour:'2-digit',minute:'2-digit'});}
+
+/* ─ TOPBAR ─ */
+function initTopbar(){
+  const t=new Date();
+  document.getElementById('day-pill').textContent=DAY_NAMES[t.getDay()];
+  document.getElementById('date-pill').textContent=t.toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric'});
+}
+
+/* ─ GOALS ─ */
+function toggleGoalForm(){document.getElementById('goal-form').classList.toggle('open');}
+function saveGoal(){
+  const name=document.getElementById('gf-name').value.trim();if(!name)return;
+  const target=parseInt(document.getElementById('gf-target').value)||100;
+  const current=parseInt(document.getElementById('gf-current').value)||0;
+  const unit=document.getElementById('gf-unit').value.trim();
+  goals.push({id:Date.now(),name,target,current,unit});
+  ['gf-name','gf-target','gf-current','gf-unit'].forEach(id=>document.getElementById(id).value='');
+  toggleGoalForm();renderGoals();
+}
+function deleteGoal(id){goals=goals.filter(g=>g.id!==id);renderGoals();}
+function nudgeGoal(id){const g=goals.find(g=>g.id===id);if(g&&g.current<g.target){g.current++;renderGoals();}}
+function renderGoals(){
+  const el=document.getElementById('goals-body');
+  if(!goals.length){el.innerHTML='<div class="goals-empty">No goals yet — hit "+ New goal" above</div>';return;}
+  el.innerHTML='<div class="goals-row-grid">'+goals.map(g=>{
+    const pct=Math.min(100,Math.round((g.current/g.target)*100));
+    const done=pct>=100;
+    return `<div class="goal-item">
+      <div class="goal-top">
+        <div class="goal-lbl" title="${g.name}">${g.name}</div>
+        <div class="goal-pct">${pct}%</div>
+        <button class="goal-del" onclick="deleteGoal(${g.id})">×</button>
+      </div>
+      <div class="goal-bar" onclick="nudgeGoal(${g.id})" title="Click to increment">
+        <div class="goal-fill${done?' done':''}" style="width:${pct}%"></div>
+      </div>
+      <div class="goal-meta">${g.current.toLocaleString()} / ${g.target.toLocaleString()}${g.unit?' '+g.unit:''} ${done?'✓':''}</div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+/* ─ TO-DO ─ */
+function addTodo(text,type='task'){todos.push({id:Date.now(),text,type,done:false});renderTodos();}
+function addTodoManual(){
+  const inp=document.getElementById('t-inp');
+  const type=document.getElementById('t-sel').value;
+  const text=inp.value.trim();if(!text)return;
+  addTodo(text,type);inp.value='';
+}
+document.getElementById('t-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addTodoManual();});
+function toggleTodo(id){const t=todos.find(t=>t.id===id);if(t){t.done=!t.done;renderTodos();}}
+function deleteTodo(id){todos=todos.filter(t=>t.id!==id);renderTodos();}
+function setFilter(f,btn){todoFilter=f;document.querySelectorAll('.tf').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderTodos();}
+function renderTodos(){
+  const el=document.getElementById('todo-grid');
+  const filtered=todoFilter==='all'?todos:todos.filter(t=>t.type===todoFilter);
+  const open=todos.filter(t=>!t.done).length;
+  document.getElementById('todo-count').textContent=`(${open} open)`;
+  if(!filtered.length){el.innerHTML=`<div class="todo-empty">No ${todoFilter==='all'?'':todoFilter+' '}items yet</div>`;return;}
+  el.innerHTML=filtered.map(t=>`
+    <div class="ti${t.done?' done':''}">
+      <button class="ti-chk" onclick="toggleTodo(${t.id})">${t.done?`<svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`:''}</button>
+      <div class="ti-body"><div class="ti-txt">${t.text}</div><span class="ti-tag ${t.type}">${t.type}</span></div>
+      <button class="ti-del" onclick="deleteTodo(${t.id})">×</button>
+    </div>`).join('');
+}
+
+/* ─ DAILY DUTIES ─ */
+function buildDayTabs(){
+  document.getElementById('day-tabs').innerHTML=DAY_NAMES.map(d=>`<button class="dtab${d===activeDay?' active':''}" onclick="switchDay('${d}',this)">${d.slice(0,3)}</button>`).join('');
+}
+function switchDay(day,btn){
+  activeDay=day;
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('active-day-lbl').textContent=day;
+  renderDailyList();
+}
+function addDuty(){
+  const inp=document.getElementById('dc-inp');
+  const text=inp.value.trim();if(!text)return;
+  dailyDuties[activeDay].push({id:Date.now(),text,checked:false});
+  inp.value='';renderDailyList();
+}
+document.getElementById('dc-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addDuty();});
+function toggleDuty(id){const item=dailyDuties[activeDay].find(i=>i.id===id);if(item){item.checked=!item.checked;renderDailyList();}}
+function deleteDuty(id){dailyDuties[activeDay]=dailyDuties[activeDay].filter(i=>i.id!==id);renderDailyList();}
+function addDutyForDay(day,text){dailyDuties[day].push({id:Date.now()+Math.random(),text,checked:false});if(day===activeDay)renderDailyList();}
+function renderDailyList(){
+  const el=document.getElementById('daily-list');
+  const list=dailyDuties[activeDay]||[];
+  if(!list.length){el.innerHTML='<div class="dc-empty">No duties set for '+activeDay+'.<br>Add some below!</div>';document.getElementById('dc-bar').style.width='0%';document.getElementById('dc-pct').textContent='0%';return;}
+  el.innerHTML=list.map(item=>`
+    <div class="dc-item${item.checked?' checked':''}">
+      <button class="dc-chk" onclick="toggleDuty(${item.id})">${item.checked?`<svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`:''}</button>
+      <div class="dc-txt">${item.text}</div>
+      <button class="dc-del" onclick="deleteDuty(${item.id})">×</button>
+    </div>`).join('');
+  const done=list.filter(i=>i.checked).length;
+  const pct=Math.round((done/list.length)*100);
+  document.getElementById('dc-bar').style.width=pct+'%';
+  document.getElementById('dc-pct').textContent=pct+'%';
+}
+
+/* ─ CALENDAR ─ */
+function addEvent(key,title,type,notes){if(!events[key])events[key]=[];events[key].push({title,type,notes:notes||''});renderCalendar();}
+function renderCalendar(){
+  const grid=document.getElementById('cal-grid');grid.innerHTML='';
+  const y=curDate.getFullYear(),m=curDate.getMonth();
+  document.getElementById('cal-lbl').textContent=`${MONTHS[m]} ${y}`;
+  const today=new Date();const ty=today.getFullYear(),tm=today.getMonth(),td=today.getDate();
+  DAY_SHORT.forEach(d=>{const el=document.createElement('div');el.className='dlbl';el.textContent=d;grid.appendChild(el);});
+  const first=new Date(y,m,1).getDay();const dim=new Date(y,m+1,0).getDate();const dip=new Date(y,m,0).getDate();
+  const total=Math.ceil((first+dim)/7)*7;
+  for(let i=0;i<total;i++){
+    const cell=document.createElement('div');cell.className='cc';
+    let dn,other=false,cy=y,cm=m;
+    if(i<first){dn=dip-first+i+1;other=true;cm=m-1;if(cm<0){cm=11;cy=y-1;}}
+    else if(i>=first+dim){dn=i-first-dim+1;other=true;cm=m+1;if(cm>11){cm=0;cy=y+1;}}
+    else dn=i-first+1;
+    if(other)cell.classList.add('other');
+    const isTdy=!other&&y===ty&&m===tm&&dn===td;if(isTdy)cell.classList.add('today');
+    const key=dk(cy,cm,dn);if(selDate===key)cell.classList.add('sel');
+    const nel=document.createElement('div');nel.className='dn';nel.textContent=dn;cell.appendChild(nel);
+    if(events[key]){
+      events[key].slice(0,3).forEach(ev=>{const ch=document.createElement('div');ch.className=`ec ${ev.type}`;ch.textContent=ev.title;ch.title=ev.notes||ev.title;cell.appendChild(ch);});
+      if(events[key].length>3){const ml=document.createElement('div');ml.className='ec-more';ml.textContent=`+${events[key].length-3}`;cell.appendChild(ml);}
+    }
+    cell.addEventListener('click',()=>{selDate=key;renderCalendar();openModal(key);});
+    grid.appendChild(cell);
+  }
+}
+document.getElementById('prev-btn').addEventListener('click',()=>{curDate.setMonth(curDate.getMonth()-1);renderCalendar();});
+document.getElementById('next-btn').addEventListener('click',()=>{curDate.setMonth(curDate.getMonth()+1);renderCalendar();});
+document.getElementById('today-btn').addEventListener('click',()=>{curDate=new Date();renderCalendar();});
+
+/* ─ MODAL ─ */
+function openModal(key){document.getElementById('m-date').value=key;document.getElementById('m-title').value='';document.getElementById('m-notes').value='';document.getElementById('m-type').value='job';document.getElementById('modal-ov').classList.add('open');}
+function closeModal(){document.getElementById('modal-ov').classList.remove('open');}
+document.getElementById('mclose').addEventListener('click',closeModal);
+document.getElementById('mcancel').addEventListener('click',closeModal);
+document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target===document.getElementById('modal-ov'))closeModal();});
+document.getElementById('msave').addEventListener('click',()=>{
+  const title=document.getElementById('m-title').value.trim();
+  const date=document.getElementById('m-date').value;
+  const type=document.getElementById('m-type').value;
+  const notes=document.getElementById('m-notes').value.trim();
+  if(!title||!date)return;
+  addEvent(date,title,type,notes);closeModal();
+  addBotMsg(`Added <strong>${title}</strong> to the calendar on ${fmtDate(date)}.`);
+});
+
+/* ─ CHAT ─ */
+const msgsEl=document.getElementById('chat-msgs');
+function scrollB(){msgsEl.scrollTop=msgsEl.scrollHeight;}
+function addBotMsg(text){const m=document.createElement('div');m.className='msg bot';m.innerHTML=`<div class="bubble">${text}</div><div class="msg-time">${tnow()}</div>`;msgsEl.appendChild(m);scrollB();}
+function addUserMsg(text){const m=document.createElement('div');m.className='msg user';m.innerHTML=`<div class="bubble">${text}</div><div class="msg-time">${tnow()}</div>`;msgsEl.appendChild(m);scrollB();}
+function showTyping(){const el=document.createElement('div');el.className='msg bot';el.id='typing';el.innerHTML=`<div class="bubble" style="padding:8px 11px;"><div class="tdots"><span></span><span></span><span></span></div></div>`;msgsEl.appendChild(el);scrollB();}
+function removeTyping(){const el=document.getElementById('typing');if(el)el.remove();}
+
+/* ─ AI ─ */
+async function processMsg(userText){
+  const todayStr=new Date().toISOString().split('T')[0];
+  const todayDayName=DAY_NAMES[new Date().getDay()];
+  const sys=`You are a personal life + work planning assistant for Josh. Today is ${todayStr} (${todayDayName}).
+
+CURRENT DATA:
+CALENDAR: ${JSON.stringify(events)}
+TO-DOS: ${JSON.stringify(todos.map(t=>({text:t.text,type:t.type,done:t.done})))}
+GOALS: ${JSON.stringify(goals.map(g=>({name:g.name,current:g.current,target:g.target,unit:g.unit})))}
+DAILY DUTIES: ${JSON.stringify(Object.fromEntries(Object.entries(dailyDuties).map(([k,v])=>[k,v.map(i=>i.text)])))}
+
+You handle FOUR things. Choose carefully based on context:
+
+1. CALENDAR EVENT — tied to a specific date/time. Keywords: schedule, book, on [day/date], next [day], at [time], remind me on [date].
+   Output: {"action":"add_event","title":"...","date":"YYYY-MM-DD","type":"job|reminder|meeting","notes":"..."}
+
+2. TO-DO ITEM — a one-off task with no specific date. Sub-types:
+   - "job": landscaping/outdoor work not yet booked (mow, edge, prune, quote)
+   - "task": admin/life tasks (call, email, book, pay, renew, fix)
+   - "general": personal misc (buy something, personal errands, anything else)
+   Output: {"action":"add_todo","text":"...","type":"job|task|general"}
+
+3. GOAL — a measurable target with a number.
+   Output: {"action":"add_goal","name":"...","target":50,"current":0,"unit":"km"}
+
+4. DAILY DUTY — a recurring responsibility on specific day(s) of the week. Sounds routine/habitual.
+   Output one per day: {"action":"add_duty","day":"Monday","text":"..."}
+   Output multiple JSON blocks for multiple days.
+
+Rules:
+- Calculate relative dates from today (${todayStr}).
+- No date mentioned = to-do (one-off) or daily duty (recurring habit).
+- Recurring/routine = daily duty. One-off action = to-do. Date attached = calendar.
+- Output raw JSON, no markdown fences.
+- Keep reply short and friendly. Confirm what you added.
+- For summary questions, answer using the data above.`;
+
+  const apiKey=localStorage.getItem('josh_api_key');
+  if(!apiKey){
+    addBotMsg("I need an API key to work. Enter it in the yellow bar at the top — get one free at <a href='https://console.anthropic.com' target='_blank' style='color:var(--g600)'>console.anthropic.com</a>.");
+    return;
+  }
+  try{
+    const res=await fetch('https://joshsgaspage.curly-mud-617f.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({apiKey,model:'claude-haiku-4-5-20251001',max_tokens:600,system:sys,messages:[{role:'user',content:userText}]})
+    });
+    const data=await res.json();
+    if(data.error){addBotMsg(`⚠️ API error: ${data.error.message}`);return;}
+    const reply=data.content?.map(b=>b.text||'').join('')||"Couldn't process that.";
+    const matches=[...reply.matchAll(/\{"action"\s*:\s*"(add_event|add_todo|add_goal|add_duty)"[^}]*\}/g)];
+    let clean=reply;
+    if(matches.length){
+      for(const m of matches){
+        try{
+          const a=JSON.parse(m[0]);clean=clean.replace(m[0],'').trim();
+          if(a.action==='add_event')addEvent(a.date,a.title,a.type||'job',a.notes||'');
+          else if(a.action==='add_todo')addTodo(a.text,a.type||'task');
+          else if(a.action==='add_goal'){goals.push({id:Date.now()+Math.random(),name:a.name,target:a.target||100,current:a.current||0,unit:a.unit||''});renderGoals();}
+          else if(a.action==='add_duty')addDutyForDay(a.day,a.text);
+        }catch{}
+      }
+      addBotMsg((clean||'Done!').replace(/\n/g,'<br>'));
+    }else{
+      addBotMsg(reply.replace(/\n/g,'<br>'));
+    }
+  }catch(e){addBotMsg(`⚠️ Connection error: ${e.message}. Check your API key is correct and you have credits at console.anthropic.com`);}
+
+/* ─ API KEY MANAGEMENT ─ */
+function saveApiKey(){
+  const val=document.getElementById('api-key-inp').value.trim();
+  if(!val.startsWith('sk-')){
+    alert('That doesn\'t look right — your API key should start with sk-');return;
+  }
+  localStorage.setItem('josh_api_key',val);
+  document.getElementById('api-banner').classList.add('hidden');
+  addBotMsg("API key saved! I'm ready to go, Josh. Try me — tell me something to schedule, a task to add, or a goal to track.");
+}
+function checkApiKey(){
+  const key=localStorage.getItem('josh_api_key');
+  if(key){
+    document.getElementById('api-banner').classList.add('hidden');
+  } else {
+    document.getElementById('api-banner').classList.remove('hidden');
+  }
+}
+
+async function handleSend(){
+  const inp=document.getElementById('chat-inp');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';inp.style.height='auto';
+  addUserMsg(text);showTyping();
+  await processMsg(text);removeTyping();
+}
+document.getElementById('send-btn').addEventListener('click',handleSend);
+document.getElementById('chat-inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
+document.getElementById('chat-inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,65)+'px';});
+function sendSugg(el){document.getElementById('chat-inp').value=el.textContent;handleSend();}
+
+/* ─ SEED ─ */
+function seed(){
+  const t=new Date();const y=t.getFullYear(),m=t.getMonth(),d=t.getDate();
+  addEvent(dk(y,m,d),'Lawn mow – Taylor property','job','14 Elm St');
+  addEvent(dk(y,m,d+1),'Quote – Harrison garden','meeting','New client');
+  addEvent(dk(y,m,d+3),'Mulching – Riverside Estate','job','3 bags');
+  addEvent(dk(y,m,d+6),'Pruning – Oak Ave','job','Trees & hedges');
+  addTodo('Send invoice to Johnson','task');
+  addTodo('Call mulch supplier','task');
+  addTodo('Edge Smith property','job');
+  addTodo('Buy fuel for mowers','general');
+  addTodo('Book car service','general');
+  addTodo('Renew liability insurance','task');
+  goals.push({id:1,name:'20 new clients this year',target:20,current:7,unit:'clients'});
+  goals.push({id:2,name:'$80k revenue by December',target:80000,current:31200,unit:'$'});
+  goals.push({id:3,name:'Run 5km without stopping',target:5,current:3,unit:'km'});
+  goals.push({id:4,name:'150 jobs completed',target:150,current:52,unit:'jobs'});
+  renderGoals();
+  /* Daily duties */
+  ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(day=>{
+    addDutyForDay(day,'Make job plan for the day');
+    addDutyForDay(day,'Check messages & reply');
+  });
+  ['Monday','Wednesday','Friday'].forEach(d=>{addDutyForDay(d,'Go to the gym');});
+  ['Tuesday','Thursday'].forEach(d=>{addDutyForDay(d,'Go for a run');});
+  addDutyForDay('Saturday','Weekly review & planning');
+  addDutyForDay('Saturday','Family time – no work');
+  addDutyForDay('Sunday','Rest & recharge');
+  addDutyForDay('Sunday','Prep for the week ahead');
+  renderDailyList();
+}
+
+
+/* ══════════ WHITEBOARD JOB EXTRACTOR ══════════ */
+let wbImageBase64 = null;
+let wbExtracted = {}; // { "Monday": [{id, text, type}], "Urgent": [...], "All Jobs": [...] }
+
+function handleWbPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    wbImageBase64 = e.target.result.split(',')[1];
+    const preview = document.getElementById('wb-preview');
+    preview.src = e.target.result;
+    preview.classList.add('show');
+    document.getElementById('wb-drop').style.display = 'none';
+    document.getElementById('wb-actions').style.display = 'flex';
+    setWbStatus('');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearWbPhoto(){
+  wbImageBase64 = null;
+  document.getElementById('wb-preview').classList.remove('show');
+  document.getElementById('wb-preview').src = '';
+  document.getElementById('wb-drop').style.display = 'flex';
+  document.getElementById('wb-actions').style.display = 'none';
+  document.getElementById('wb-file-inp').value = '';
+  setWbStatus('');
+}
+
+function setWbStatus(msg, loading=false){
+  const el = document.getElementById('wb-status');
+  if(!msg){ el.style.display='none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = loading ? `<div class="wb-spinner"></div><span>${msg}</span>` : `<span>${msg}</span>`;
+}
+
+async function extractJobs(){
+  const apiKey = localStorage.getItem('josh_api_key');
+  if(!apiKey){ alert('Enter your API key in the yellow bar at the top first.'); return; }
+  if(!wbImageBase64){ alert('Upload a photo first.'); return; }
+
+  const btn = document.getElementById('wb-extract-btn');
+  btn.disabled = true;
+  setWbStatus('Reading your whiteboard…', true);
+
+  const prompt = `This is a photo of a landscaping job planning whiteboard.
+
+Please extract ALL text you can see and organise it into this exact JSON structure:
+{
+  "days": {
+    "Monday": ["job1", "job2"],
+    "Tuesday": ["job1"],
+    "Wednesday": ["job1"],
+    "Thursday": ["job1"],
+    "Friday": ["job1"],
+    "Saturday": [],
+    "Sunday": []
+  },
+  "pre_sale_maintenance": ["job1", "job2"],
+  "pre_sale_tidys": ["job1", "job2"],
+  "landscaping_jobs": ["job1"],
+  "small_jobs": ["job1"],
+  "maintenance": ["job1"],
+  "other": ["anything that doesn't fit above"]
+}
+
+Rules:
+- Only include days/sections that actually have content — skip empty ones
+- Each job entry should include the address/name and any crew names mentioned (e.g. "336b Raimutahana – Paul, Sam")
+- The right-hand column of the whiteboard contains job lists — split them into the correct sections:
+  * "Pre sale maintenance" or "Pre-sale maintenance" jobs → pre_sale_maintenance
+  * "Pre sale tidys" or "Pre-sale tidys" jobs → pre_sale_tidys
+  * "Landscaping jobs" → landscaping_jobs
+  * "Small gardening jobs" or "small jobs" → small_jobs
+  * "Maintenance jobs" or "maintenance" → maintenance
+- Return ONLY the raw JSON, no explanation, no markdown fences`;
+
+  try {
+    const res = await fetch('https://joshsgaspage.curly-mud-617f.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: wbImageBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    if(data.error){ setWbStatus('Error: ' + data.error.message); btn.disabled=false; return; }
+
+    const raw = data.content?.map(b=>b.text||'').join('') || '{}';
+    let parsed;
+    try {
+      const clean = raw.replace(/```json|```/g,'').trim();
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      setWbStatus('Could not parse response — try again');
+      btn.disabled = false;
+      return;
+    }
+
+    wbExtracted = {};
+    let totalJobs = 0;
+
+    // Build structured data
+    const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    if(parsed.days){
+      DAY_ORDER.forEach(day => {
+        if(parsed.days[day] && parsed.days[day].length > 0){
+          wbExtracted[day] = parsed.days[day].map(j=>({id:Date.now()+Math.random(), text:j, type:'job'}));
+          totalJobs += parsed.days[day].length;
+        }
+      });
+    }
+    const rightSections = {
+      'Pre-Sale Maintenance': parsed.pre_sale_maintenance || parsed.urgent,
+      'Pre-Sale Tidys': parsed.pre_sale_tidys || parsed.all_jobs,
+      'Landscaping Jobs': parsed.landscaping_jobs,
+      'Small Gardening Jobs': parsed.small_jobs,
+      'Maintenance Jobs': parsed.maintenance,
+      'Other': parsed.other
+    };
+    Object.entries(rightSections).forEach(([label, jobs]) => {
+      if(jobs && jobs.length > 0){
+        wbExtracted[label] = jobs.map(j=>({id:Date.now()+Math.random(), text:j, type:'job'}));
+        totalJobs += jobs.length;
+      }
+    });
+
+    renderWbJobs();
+    document.getElementById('wb-job-count').textContent = `(${totalJobs} jobs found)`;
+    setWbStatus(`✓ ${totalJobs} jobs extracted`);
+    // Show confirm button, reset confirmed state
+    wbConfirmed = false;
+    document.getElementById('wb-confirm-btn').style.display = 'inline-block';
+    document.getElementById('wb-confirmed-badge').style.display = 'none';
+    document.getElementById('wb-save-all-btn').style.display = 'none';
+    btn.disabled = false;
+
+  } catch(e) {
+    setWbStatus('Connection error — check API key');
+    btn.disabled = false;
+  }
+}
+
+const RIGHT_SIDE_SECTIONS = ['Pre-Sale Maintenance','Pre-Sale Tidys','Landscaping Jobs','Small Gardening Jobs','Maintenance Jobs','Other'];
+
+/* map AI output keys to display names */
+const SECTION_MAP = {
+  'urgent': 'Pre-sale Maintenance',
+  'all_jobs': 'Pre-sale Tidys',
+  'landscaping_jobs': 'Landscaping Jobs',
+  'small_jobs': 'Small Jobs',
+  'maintenance': 'Maintenance',
+  'other': 'Other'
+};
+
+function renderWbJobs(){
+  const body = document.getElementById('wb-jobs-body');
+  if(!Object.keys(wbExtracted).length){
+    body.innerHTML = '<div class="wb-empty">Upload a photo of your whiteboard and hit "Extract Jobs with AI" — the jobs will appear here, editable and ready to save.</div>';
+    return;
+  }
+
+  const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const days = DAY_ORDER.filter(d => wbExtracted[d]);
+  const rightSecs = RIGHT_SIDE_SECTIONS.filter(s => wbExtracted[s]);
+
+  function jobRows(section){
+    const jobs = wbExtracted[section] || [];
+    return jobs.map(job => {
+      const hasNotes = job.blurb || job.crew || job.hours || job.notes;
+      if(wbConfirmed){
+        return `<div class="wb-job-row confirmed-mode${hasNotes?' wb-job-has-notes':''}" onclick="openJobDetail('${section}',${job.id})" title="Click to add details">
+          <div class="wb-job-bullet"></div>
+          <span style="flex:1;font-size:12px;color:var(--gr900);padding:3px 2px;">${escHtml(job.text)}</span>
+          ${hasNotes ? `<span style="font-size:9px;color:var(--g600);background:var(--g50);border-radius:3px;padding:1px 5px;flex-shrink:0;font-weight:500;">notes ✓</span>` : `<span style="font-size:9px;color:var(--gr400);flex-shrink:0;">+ details</span>`}
+        </div>`;
+      }
+      return `<div class="wb-job-row" data-id="${job.id}">
+        <div class="wb-job-bullet"></div>
+        <input class="wb-job-inp" value="${escHtml(job.text)}" onchange="updateWbJob('${section}',${job.id},this.value)" />
+        <button class="wb-job-del" onclick="deleteWbJob('${section}',${job.id})">×</button>
+      </div>`;
+    }).join('');
+  }
+
+  function addRow(section){
+    if(wbConfirmed) return '';
+    return `<div class="wb-add-job-row">
+      <input class="wb-add-job-inp" placeholder="+ add..." onkeydown="if(event.key==='Enter')addWbJob('${section}',this)" />
+      <button class="wb-add-job-btn" onclick="addWbJobBtn('${section}',this)">+</button>
+    </div>`;
+  }
+
+  const leftCol = days.map(day => `
+    <div class="wb-board-day">
+      <div class="wb-board-day-hdr">${day}</div>
+      <div class="wb-board-jobs">${jobRows(day)}</div>
+      ${addRow(day)}
+    </div>`).join('');
+
+  const rightCol = rightSecs.length ? rightSecs.map(sec => {
+    return `<div class="wb-board-day">
+      <div class="wb-board-day-hdr">${sec}</div>
+      <div class="wb-board-jobs">${jobRows(sec)}</div>
+      ${addRow(sec)}
+    </div>`;
+  }).join('') : '<div class="wb-empty" style="padding:16px 0;">No job lists found</div>';
+
+  body.innerHTML = `<div class="wb-board-layout">
+    <div class="wb-board-col wb-board-left">${leftCol || '<div class="wb-empty" style="padding:16px 0;">No daily jobs found</div>'}</div>
+    <div class="wb-board-divider"></div>
+    <div class="wb-board-col wb-board-right">${rightCol}</div>
+  </div>`;
+}
+
+let wbConfirmed = false;
+let currentJobDetail = null; // {section, id}
+
+function confirmJobs(){
+  wbConfirmed = true;
+  document.getElementById('wb-confirm-btn').style.display = 'none';
+  document.getElementById('wb-confirmed-badge').style.display = 'inline-block';
+  document.getElementById('wb-save-all-btn').style.display = 'inline-block';
+  renderWbJobs();
+}
+
+/* job detail modal */
+function openJobDetail(section, id){
+  const job = (wbExtracted[section]||[]).find(j=>j.id===id);
+  if(!job) return;
+  currentJobDetail = {section, id};
+  document.getElementById('jd-title').textContent = job.text;
+  document.getElementById('jd-section').textContent = section;
+  document.getElementById('jd-name').value = job.text;
+  document.getElementById('jd-blurb').value = job.blurb || '';
+  document.getElementById('jd-crew').value = job.crew || '';
+  document.getElementById('jd-hours').value = job.hours || '';
+  document.getElementById('jd-notes').value = job.notes || '';
+  document.getElementById('job-detail-ov').classList.add('open');
+}
+
+function saveJobDetail(){
+  if(!currentJobDetail) return;
+  const {section, id} = currentJobDetail;
+  const job = (wbExtracted[section]||[]).find(j=>j.id===id);
+  if(!job) return;
+  job.text = document.getElementById('jd-name').value.trim() || job.text;
+  job.blurb = document.getElementById('jd-blurb').value.trim();
+  job.crew = document.getElementById('jd-crew').value.trim();
+  job.hours = document.getElementById('jd-hours').value.trim();
+  job.notes = document.getElementById('jd-notes').value.trim();
+  document.getElementById('job-detail-ov').classList.remove('open');
+  renderWbJobs();
+}
+
+document.getElementById('jd-close').addEventListener('click', ()=> document.getElementById('job-detail-ov').classList.remove('open'));
+document.getElementById('jd-cancel').addEventListener('click', ()=> document.getElementById('job-detail-ov').classList.remove('open'));
+document.getElementById('jd-save').addEventListener('click', saveJobDetail);
+document.getElementById('job-detail-ov').addEventListener('click', e=>{ if(e.target===document.getElementById('job-detail-ov')) document.getElementById('job-detail-ov').classList.remove('open'); });
+
+
+function updateWbJob(section, id, val){
+  const job = (wbExtracted[section]||[]).find(j=>j.id===id);
+  if(job) job.text = val;
+}
+function updateWbJobType(section, id, val){
+  const job = (wbExtracted[section]||[]).find(j=>j.id===id);
+  if(job) job.type = val;
+}
+function deleteWbJob(section, id){
+  if(wbExtracted[section]) wbExtracted[section] = wbExtracted[section].filter(j=>j.id!==id);
+  renderWbJobs();
+}
+function addWbJob(section, inp){
+  const text = inp.value.trim(); if(!text) return;
+  if(!wbExtracted[section]) wbExtracted[section] = [];
+  wbExtracted[section].push({id:Date.now()+Math.random(), text, type:'job'});
+  renderWbJobs();
+}
+function addWbJobBtn(section, btn){
+  const inp = btn.previousElementSibling;
+  addWbJob(section, inp);
+}
+
+function saveAllToCalendar(){
+  const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const today = new Date();
+  const todayDow = today.getDay(); // 0=Sun
+  let saved = 0;
+
+  DAY_ORDER.forEach(dayName => {
+    if(!wbExtracted[dayName]) return;
+    // Find next occurrence of this day
+    const targetDow = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].indexOf(dayName);
+    let diff = targetDow - todayDow;
+    if(diff < 0) diff += 7;
+    if(diff === 0) diff = 0; // today
+    const d = new Date(today);
+    d.setDate(today.getDate() + diff);
+    const key = dk(d.getFullYear(), d.getMonth(), d.getDate());
+
+    wbExtracted[dayName].forEach(job => {
+      if(job.text.trim()){
+        addEvent(key, job.text, job.type, '');
+        saved++;
+      }
+    });
+  });
+
+  // Right-side sections go to todo list
+  RIGHT_SIDE_SECTIONS.forEach(section => {
+    if(!wbExtracted[section]) return;
+    wbExtracted[section].forEach(job => {
+      if(job.text.trim()){
+        addTodo(job.text, 'job');
+        saved++;
+      }
+    });
+  });
+
+  if(saved > 0){
+    alert(`✓ Saved! ${saved} jobs added — daily jobs on the calendar, job lists added to your To-Do.`);
+  } else {
+    alert('No jobs to save yet — extract jobs from a photo first.');
+  }
+}
+
+checkApiKey();
+initTopbar();
+buildDayTabs();
+document.getElementById('active-day-lbl').textContent=activeDay;
+renderCalendar();
+renderTodos();
+seed();
+
+setTimeout(()=>{
+  const hr=new Date().getHours();
+  const greet=hr<12?'morning':hr<17?'afternoon':'evening';
+  const hasKey=localStorage.getItem('josh_api_key');
+  if(hasKey){
+    addBotMsg(`Good ${greet}, Josh! Today is <strong>${DAY_NAMES[new Date().getDay()]}</strong>. Tell me anything — I'll put it in the right place. Try <em>"schedule a mow at Smith's next Friday"</em>, <em>"add go to the gym every Monday Wednesday Friday"</em>, or <em>"I want to save $10k by Christmas"</em>.`);
+  } else {
+    addBotMsg(`Good ${greet}, Josh! Enter your Anthropic API key in the yellow bar above to activate me. Once that's done I can schedule jobs, track goals, set daily duties and more.`);
+  }
+},300);
+</script>
+</body>
+</html>
